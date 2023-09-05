@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'chronic_on_physical.dart';
+
+
 class PhysicalPage extends StatefulWidget {
   static const String routeName = '/physical';
 
@@ -28,7 +31,7 @@ class _PhysicalPageState extends State<PhysicalPage> {
 
   Future<void> makeHeartRatePrediction() async {
     final apiUrl =
-    Uri.parse('http://10.0.2.2:5000/predict_heart_rate'); // Replace with your API endpoint
+    Uri.parse('http://10.0.2.2:5000/predict_heart_rate');
     final headers = {'Content-Type': 'application/json'};
 
     int selectedHeartRate1;
@@ -157,6 +160,14 @@ class _PhysicalPageState extends State<PhysicalPage> {
                 Center(child: _buildButton('Predict Anomality', makeHeartRatePrediction)),
                 SizedBox(height: 20),
                 _buildResultText(),
+
+                SizedBox(height: 20),
+                  _buildButton(
+                    'Chronic Disease Risk Prediction',
+                        () {
+                      Navigator.pushNamed(context, ChronicPhysical.routeName);
+                    },
+                  ),
               ],
             ),
           ),

@@ -7,6 +7,7 @@ import 'package:chrono_app/view/view.dart';
 
 import '../view/home/home_screen.dart';
 import '../view/infomation/info.dart';
+import '../view/predictions/chronic_on_physical.dart';
 import '../view/sleepPattern/sleep_pattern.dart';
 
 
@@ -31,6 +32,8 @@ class AppRouter {
         return ChronicDiseasePage.route();
       case InformationPage.routeName:
         return InformationPage.route();
+      case ChronicPhysical.routeName:
+        return ChronicPhysical.route();
 
 
 

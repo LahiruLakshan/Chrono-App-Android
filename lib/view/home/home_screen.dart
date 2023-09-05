@@ -74,7 +74,7 @@ class _MyApp extends State<HomeScreen> {
     if (await Permission.activityRecognition.request().isGranted) {
       return true;
     } else {
-      return false;
+      return true;
     }
   }
 
@@ -301,7 +301,7 @@ class _MyApp extends State<HomeScreen> {
                   width: double.infinity,
                   child: Center(
                 child: const Text(
-                  'Classify Physical Activities',
+                  'Anomaly Prediction',
                   style: TextStyle(
                     fontSize: 20,
                     color: Colors.white,
