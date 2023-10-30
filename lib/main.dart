@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
         title: 'Chrono',
         onGenerateRoute: AppRouter.onGenerateRoute,
         initialRoute: SplashView.routeName,
-        home: SignInScreen(),
+        home: HomeScreen(),
       );
     }
   }

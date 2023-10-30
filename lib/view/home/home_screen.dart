@@ -1,4 +1,5 @@
 
+import 'package:chrono_app/view/dietary/dietary.dart';
 import 'package:chrono_app/view/infomation/info.dart';
 import 'package:chrono_app/view/predictions/physical_activity_screen.dart';
 import 'package:chrono_app/view/signIn/sign_in_screen.dart';
@@ -227,175 +228,206 @@ class _MyApp extends State<HomeScreen> {
             )
           ],
         ),
-        body: Container(
-          alignment: Alignment.center,
-          padding: EdgeInsets.symmetric(horizontal: 16),
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: NetworkImage('https://i.pinimg.com/474x/3c/a6/e0/3ca6e0da8cd7faabb845cf32aad51c90.jpg'),
-              fit: BoxFit.cover,
+        body: SingleChildScrollView(
+          child: Container(
+            alignment: Alignment.center,
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: NetworkImage('https://i.pinimg.com/474x/3c/a6/e0/3ca6e0da8cd7faabb845cf32aad51c90.jpg'),
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-          child: _permissionGranted
-              ? Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                _unit == 'Steps' ? '$_unit taken:' : '$_unit walked:',
-                style: TextStyle(
-                  fontSize: _unit.length > 8 ? 32 : 48,
+            child: _permissionGranted
+                ? Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  _unit == 'Steps' ? '$_unit taken:' : '$_unit walked:',
+                  style: TextStyle(
+                    fontSize: _unit.length > 8 ? 32 : 48,
+                    color: Colors.blue[900], // Dark blue
+                    fontFamily: 'Raleway ', // Use a different font
+                  ),
+                ),
+                Text(
+                  convertStepsTo(_unit),
+                  style: TextStyle(
+                    fontSize: convertStepsTo(_unit).length > 5 ? 64 : 128,
+                    color: Colors.blue[900], // Dark blue
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Quicksand  ', // Use a different font
+                  ),
+                ),
+                const SizedBox(height: 14),
+                Icon(
+                  _pedestrianStatus == 'stopped'
+                      ? Icons.boy_rounded // Use a different icon
+                      : _pedestrianStatus == 'walking'
+                      ? Icons.directions_walk
+                      : Icons.error_outline, // Use a different icon
+                  size: 128,
                   color: Colors.blue[900], // Dark blue
-                  fontFamily: 'Raleway ', // Use a different font
                 ),
-              ),
-              Text(
-                convertStepsTo(_unit),
-                style: TextStyle(
-                  fontSize: convertStepsTo(_unit).length > 5 ? 64 : 128,
-                  color: Colors.blue[900], // Dark blue
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Quicksand  ', // Use a different font
+                const SizedBox(height: 10),
+                Text(
+                  _pedestrianStatus != 'unknown'
+                      ? 'You are $_pedestrianStatus'
+                      : 'Unknown pedestrian status',
+                  style: TextStyle(
+                    color: Colors.blue[900], // Dark blue
+                    fontSize: 18,
+                    fontFamily: 'Roboto', // Use a different font
+                  ),
                 ),
-              ),
-              const SizedBox(height: 14),
-              Icon(
-                _pedestrianStatus == 'stopped'
-                    ? Icons.boy_rounded // Use a different icon
-                    : _pedestrianStatus == 'walking'
-                    ? Icons.directions_walk
-                    : Icons.error_outline, // Use a different icon
-                size: 128,
-                color: Colors.blue[900], // Dark blue
-              ),
-              const SizedBox(height: 10),
-              Text(
-                _pedestrianStatus != 'unknown'
-                    ? 'You are $_pedestrianStatus'
-                    : 'Unknown pedestrian status',
-                style: TextStyle(
-                  color: Colors.blue[900], // Dark blue
-                  fontSize: 18,
-                  fontFamily: 'Roboto', // Use a different font
-                ),
-              ),
-              const SizedBox(height: 8),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(context, _customPageRouteBuilder(SleepPatternPredictionPage()));
-                },
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.blue[900], // Dark blue
-                  padding: const EdgeInsets.all(16),
-                ),
-                child: Container(
-                  width: double.infinity, // Make the button width fill the parent
-                  child: Center(
-                    child: const Text(
-                      'Sleep Pattern Prediction',
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                        fontFamily: 'Roboto', // Use a different font
+                const SizedBox(height: 8),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(context, _customPageRouteBuilder(SleepPatternPredictionPage()));
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.blue[900], // Dark blue
+                    padding: const EdgeInsets.all(16),
+                  ),
+                  child: Container(
+                    width: double.infinity, // Make the button width fill the parent
+                    child: Center(
+                      child: const Text(
+                        'Sleep Pattern Prediction',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontFamily: 'Roboto', // Use a different font
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 8),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(context, _customPageRouteBuilder(PhysicalPage()));
-                },
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.blue[900],
-                  padding: const EdgeInsets.all(16),
-                  ),
-                child: Container(
-                  width: double.infinity,
-                  child: Center(
-                child: const Text(
-                  'Anomaly Prediction',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                    fontFamily: 'Roboto', // Use a different font
-                  ),
-                ),
-              ),
-              ),
-              ),
-              const SizedBox(height: 8),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(context, _customPageRouteBuilder(InformationPage()));
-                },
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.blue[900],
-                  padding: const EdgeInsets.all(16),
-                ),
-                child: Container(
-                  width: double.infinity,
-                  child: Center(
-                child: const Text(
-                  'Information',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                    fontFamily: 'Roboto', // Use a different font
-                  ),
-                ),
-              ),),
-              ),
-              const SizedBox(height: 8),
-              ElevatedButton(
-                onPressed: () {
-                  FirebaseAuth.instance.signOut().then((value) {
-                    loggedInUser = null; // Clear the logged-in user
-                    Navigator.pushNamed(context, SignInScreen.routeName);
-                  });
-                },
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.blue[900], // Dark blue
-                  padding: const EdgeInsets.all(16),
-                ),
-                child: Container(
-                  width: double.infinity, // Make the button width fill the parent
-                  child: Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        const Icon(
-                          Icons.exit_to_app, // Add your desired icon
-                          color: Colors.white,
-                          size: 24, // Adjust the size as needed
-                        ),
-                        const SizedBox(width: 8), // Add spacing between icon and text
-                        const Text(
-                          'Log Out',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                            fontFamily: 'Roboto', // Use a different font
-                          ),
-                        ),
-                      ],
+                const SizedBox(height: 8),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(context, _customPageRouteBuilder(PhysicalPage()));
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.blue[900],
+                    padding: const EdgeInsets.all(16),
+                    ),
+                  child: Container(
+                    width: double.infinity,
+                    child: Center(
+                  child: const Text(
+                    'Anomaly Prediction',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                      fontFamily: 'Roboto', // Use a different font
                     ),
                   ),
                 ),
+                ),
+                ),
+                const SizedBox(height: 8),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) {
+                          return DietaryPage();
+                        },
+                          settings: RouteSettings(name: 'DietaryPage',),
+                        ));
+
+                    // Navigator.push(context, _customPageRouteBuilder(DietaryPage()));
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.blue[900],
+                    padding: const EdgeInsets.all(16),
+                  ),
+                  child: Container(
+                    width: double.infinity,
+                    child: Center(
+                      child: const Text(
+                        'Dietary Monitoring',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontFamily: 'Roboto', // Use a different font
+                        ),
+                      ),
+                    ),),
+                ),
+                const SizedBox(height: 8),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(context, _customPageRouteBuilder(InformationPage()));
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.blue[900],
+                    padding: const EdgeInsets.all(16),
+                  ),
+                  child: Container(
+                    width: double.infinity,
+                    child: Center(
+                  child: const Text(
+                    'Information',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                      fontFamily: 'Roboto', // Use a different font
+                    ),
+                  ),
+                ),),
+                ),
+                const SizedBox(height: 8),
+                ElevatedButton(
+                  onPressed: () {
+                    FirebaseAuth.instance.signOut().then((value) {
+                      loggedInUser = null; // Clear the logged-in user
+                      Navigator.pushNamed(context, SignInScreen.routeName);
+                    });
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.blue[900], // Dark blue
+                    padding: const EdgeInsets.all(16),
+                  ),
+                  child: Container(
+                    width: double.infinity, // Make the button width fill the parent
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          const Icon(
+                            Icons.exit_to_app, // Add your desired icon
+                            color: Colors.white,
+                            size: 24, // Adjust the size as needed
+                          ),
+                          const SizedBox(width: 8), // Add spacing between icon and text
+                          const Text(
+                            'Log Out',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.white,
+                              fontFamily: 'Roboto', // Use a different font
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            )
+                : AlertDialog(
+              title: Text(
+                'Permission Denied',
+                style: TextStyle(
+                  color: Colors.blue[900], // Use the same darker shade
+                ),
               ),
-            ],
-          )
-              : AlertDialog(
-            title: Text(
-              'Permission Denied',
-              style: TextStyle(
-                color: Colors.blue[900], // Use the same darker shade
-              ),
-            ),
-            content: Text(
-              'You must grant activity recognition permission to use this app',
-              style: TextStyle(
-                color: Colors.blue[900], // Use the same darker shade
+              content: Text(
+                'You must grant activity recognition permission to use this app',
+                style: TextStyle(
+                  color: Colors.blue[900], // Use the same darker shade
+                ),
               ),
             ),
           ),
