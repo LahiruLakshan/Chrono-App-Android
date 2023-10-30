@@ -31,7 +31,7 @@ class _ChronicDiseasePageState extends State<ChronicDiseasePage> {
   String predictionResult = '';
 
   Future<void> makeChronicRiskPrediction() async {
-    final apiUrl = Uri.parse('http://10.0.2.2:5000/predict_chronic_risk'); // Update the API URL
+    final apiUrl = Uri.parse('http://16.171.0.52:5000/predict_chronic_risk'); // Update the API URL
     final headers = {'Content-Type': 'application/json'};
     final body = jsonEncode({
       'Feature1': int.tryParse(feature1Controller.text) ?? 0,
@@ -65,76 +65,108 @@ class _ChronicDiseasePageState extends State<ChronicDiseasePage> {
       TextEditingController controller,
       String labelText,
       TextStyle textStyle,
+      IconData iconData,
       ) {
-    return Container(
-      width: 300, // Adjust the width as needed
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center, // Center-align the labels
-        children: [
-          Text(
-            labelText,
-            style: textStyle.copyWith(color: Colors.blue[900]), // Apply the provided textStyle with blue[900] color
-          ),
-          SizedBox(height: 8), // Add some spacing between label and text field
-          TextField(
-            controller: controller,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-              hintText: 'Enter Value',
-              border: OutlineInputBorder(),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(
+              iconData,
+              color: Colors.blue[900],
+              size: 18,
             ),
+            SizedBox(width: 8),
+            Text(
+              labelText,
+              style: textStyle.copyWith(color: Colors.black),
+            ),
+          ],
+        ),
+        SizedBox(height: 8), // Add some spacing between label and text field
+        TextField(
+          controller: controller,
+          keyboardType: TextInputType.number,
+          decoration: InputDecoration(
+            hintText: 'Enter Value',
+            border: OutlineInputBorder(),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
   Widget _buildStyledDropdown(
+      String labelText,
       String selectedValue,
       List<String> items,
       void Function(String?) onChanged,
+      IconData iconData,
       ) {
-    return Container(
-      width: 300,
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: Colors.black38,
-        ),
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Theme(
-        data: Theme.of(context).copyWith(
-          splashColor: Colors.blue[900],
-        ),
-        child: DropdownButton<String>(
-          isExpanded: true,
-          value: selectedValue,
-          onChanged: onChanged,
-          items: items
-              .map<DropdownMenuItem<String>>(
-                (String value) => DropdownMenuItem<String>(
-              value: value,
-              child: Center(
-                child: Text(
-                  value,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 18,
-                  ),
-                ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(
+              iconData,
+              color: Colors.blue[900],
+              size: 18,
+            ),
+            SizedBox(width: 8),
+            Text(
+              labelText,
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 18,
               ),
             ),
-          )
-              .toList(),
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 18,
+          ],
+        ),
+        SizedBox(height: 8),
+        Container(
+          width: 400,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.black38,
+            ),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: Theme(
+            data: Theme.of(context).copyWith(
+              splashColor: Colors.blue[900],
+            ),
+            child: DropdownButton<String>(
+              isExpanded: true,
+              value: selectedValue,
+              onChanged: onChanged,
+              items: items
+                  .map<DropdownMenuItem<String>>(
+                    (String value) => DropdownMenuItem<String>(
+                  value: value,
+                  child: Center(
+                    child: Text(
+                      value,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                ),
+              )
+                  .toList(),
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+              ),
+            ),
           ),
         ),
-      ),
+      ],
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -155,11 +187,18 @@ class _ChronicDiseasePageState extends State<ChronicDiseasePage> {
         child: Center(
           child: SingleChildScrollView(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center, // Align everything to the center
               children: [
-                _buildStyledTextField(feature1Controller, 'Age', labelTextStyle),
-                Text('Select Gender:', style: labelTextStyle.copyWith(color: Colors.blue[900])), // Apply the label text style
+                SizedBox(height: 16),
+                _buildStyledTextField(
+                  feature1Controller,
+                  'Age',
+                  labelTextStyle,
+                  Icons.person,
+                ),
+                SizedBox(height: 16),
                 _buildStyledDropdown(
+                  'Gender',
                   selectedGender,
                   ['Male', 'Female'],
                       (String? newValue) {
@@ -167,13 +206,39 @@ class _ChronicDiseasePageState extends State<ChronicDiseasePage> {
                       selectedGender = newValue!;
                     });
                   },
+                  Icons.accessibility,
                 ),
-                _buildStyledTextField(feature3Controller, 'BMI', labelTextStyle),
-                _buildStyledTextField(feature4Controller, 'Blood Pressure (BP)', labelTextStyle),
-                _buildStyledTextField(feature5Controller, 'High-Density Lipoprotein (HDL)', labelTextStyle),
-                _buildStyledTextField(feature6Controller, 'Low-Density Lipoprotein (LDL)', labelTextStyle),
-                Text('Do any family members have/had chronic disease:', style: labelTextStyle.copyWith(color: Colors.blue[900])), // Apply the label text style
+                SizedBox(height: 16),
+                _buildStyledTextField(
+                  feature3Controller,
+                  'BMI',
+                  labelTextStyle,
+                  Icons.timeline,
+                ),
+                SizedBox(height: 16),
+                _buildStyledTextField(
+                  feature4Controller,
+                  'Blood Pressure (BP)',
+                  labelTextStyle,
+                  Icons.favorite_border,
+                ),
+                SizedBox(height: 16),
+                _buildStyledTextField(
+                  feature5Controller,
+                  'High-Density Lipoprotein (HDL)',
+                  labelTextStyle,
+                  Icons.favorite,
+                ),
+                SizedBox(height: 16),
+                _buildStyledTextField(
+                  feature6Controller,
+                  'Low-Density Lipoprotein (LDL)',
+                  labelTextStyle,
+                  Icons.favorite_outline,
+                ),
+                SizedBox(height: 16),
                 _buildStyledDropdown(
+                  'Do your relative have/had chronic disease',
                   selectedFamilyHistory,
                   ['Yes', 'No'],
                       (String? newValue) {
@@ -181,12 +246,11 @@ class _ChronicDiseasePageState extends State<ChronicDiseasePage> {
                       selectedFamilyHistory = newValue!;
                     });
                   },
+                  Icons.people,
                 ),
-                Text(
-                  'Are you a Smoker:',
-                  style: labelTextStyle.copyWith(color: Colors.blue[900]),
-                ),
+                SizedBox(height: 16),
                 _buildStyledDropdown(
+                  'Are you a smoker',
                   selectedSmoker,
                   ['Yes', 'No'],
                       (String? newValue) {
@@ -194,8 +258,16 @@ class _ChronicDiseasePageState extends State<ChronicDiseasePage> {
                       selectedSmoker = newValue!;
                     });
                   },
+                  Icons.smoking_rooms,
                 ),
-                _buildStyledTextField(feature9Controller, 'How long do you spend on physical activity in a day (minutes):', labelTextStyle), // Adjusted label text
+                SizedBox(height: 16),
+                _buildStyledTextField(
+                  feature9Controller,
+                  'Physical Activities in a Day (minutes):',
+                  labelTextStyle,
+                  Icons.directions_run,
+                ),
+                SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: makeChronicRiskPrediction,
                   child: Text('Predict Chronic Risk', style: TextStyle(fontSize: 18)), // Apply the button text style
@@ -205,7 +277,35 @@ class _ChronicDiseasePageState extends State<ChronicDiseasePage> {
                   ),
                 ),
                 SizedBox(height: 20),
-                Text(predictionResult),
+                Visibility(
+                  visible: predictionResult.isNotEmpty, // Only make the widget visible when predictionResult is not empty
+                  child: Container(
+                    padding: EdgeInsets.all(16),
+                    margin: EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 5,
+                          blurRadius: 7,
+                          offset: Offset(0, 3), // changes position of shadow
+                        ),
+                      ],
+                    ),
+                    child: Text(
+                      predictionResult,
+                      style: TextStyle(
+                        fontSize: 25,
+                        color: predictionResult.contains('There is a Risk of Chronic Kidney Disease')
+                            ? Colors.red.shade900 // Dark red for risk
+                            : Colors.green.shade900, // Dark green for no risk
+                        fontWeight: FontWeight.bold, // Make the text bold
+                      ),
+                    ),
+                  ),
+                )
               ],
             ),
           ),

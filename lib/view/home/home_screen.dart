@@ -180,13 +180,26 @@ class _MyApp extends State<HomeScreen> {
     );
   }
 
+  PageRouteBuilder _customPageRouteBuilder(Widget page) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(1.0, 0.0); // Slide from right
+        const end = Offset.zero; // Ends at the center of the screen
+        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: Curves.easeInOut));
+        var offsetAnimation = animation.drive(tween);
+        return SlideTransition(position: offsetAnimation, child: child);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: Colors.blue[900], // Dark blue
-        accentColor: Colors.blue[900], // Dark blue
+        hintColor: Colors.blue[900], // Dark blue
         scaffoldBackgroundColor: Colors.white,
         appBarTheme: AppBarTheme(
           backgroundColor: Colors.blue[900], // Dark blue
@@ -268,7 +281,7 @@ class _MyApp extends State<HomeScreen> {
               const SizedBox(height: 8),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, SleepPatternPredictionPage.routeName);
+                  Navigator.push(context, _customPageRouteBuilder(SleepPatternPredictionPage()));
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Colors.blue[900], // Dark blue
@@ -291,7 +304,7 @@ class _MyApp extends State<HomeScreen> {
               const SizedBox(height: 8),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, PhysicalPage.routeName);
+                  Navigator.push(context, _customPageRouteBuilder(PhysicalPage()));
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Colors.blue[900],
@@ -314,7 +327,7 @@ class _MyApp extends State<HomeScreen> {
               const SizedBox(height: 8),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, InformationPage.routeName);
+                  Navigator.push(context, _customPageRouteBuilder(InformationPage()));
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Colors.blue[900],

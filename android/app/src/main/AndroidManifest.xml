@@ -3,6 +3,7 @@
     package="com.example.chrono_app">
 
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:label="chrono_app"

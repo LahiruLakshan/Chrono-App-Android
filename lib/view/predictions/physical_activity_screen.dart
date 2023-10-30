@@ -31,7 +31,7 @@ class _PhysicalPageState extends State<PhysicalPage> {
 
   Future<void> makeHeartRatePrediction() async {
     final apiUrl =
-    Uri.parse('http://10.0.2.2:5000/predict_heart_rate');
+    Uri.parse('http://16.171.0.52:5000/predict_heart_rate');
     final headers = {'Content-Type': 'application/json'};
 
     int selectedHeartRate1;
@@ -93,82 +93,134 @@ class _PhysicalPageState extends State<PhysicalPage> {
     }
   }
 
+  PageRouteBuilder _customPageRouteBuilder(Widget page) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(1.0, 0.0); // Slide from right
+        const end = Offset.zero; // Ends at the center of the screen
+        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: Curves.easeInOut));
+        var offsetAnimation = animation.drive(tween);
+        return SlideTransition(position: offsetAnimation, child: child);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final labelTextStyle = TextStyle(fontSize: 18, color: Colors.blue[900]);
 
     return Scaffold(
-      appBar: AppBar(title: Text('Anomaly Prediction'), backgroundColor: Colors.blue[900]),
-      body: Container( // Use a Container for the background image
+      appBar: AppBar(
+        title: Text('Anomaly Prediction'),
+        backgroundColor: Colors.blue[900],
+      ),
+      body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: NetworkImage('https://i.pinimg.com/originals/06/38/c0/0638c03a05c4c636193a2eeb40f916c7.jpg'), // Replace with your image URL
-            fit: BoxFit.cover, // You can adjust the fit as needed
+            image: NetworkImage(
+                'https://i.pinimg.com/originals/06/38/c0/0638c03a05c4c636193a2eeb40f916c7.jpg'),
+            fit: BoxFit.cover,
           ),
         ),
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(child: _buildLabel('Select Heart Rate:', labelTextStyle)),
-                Center(child: _buildStyledDropdown(
-                  selectedHeartRate,
-                  ['High', 'Low', 'Medium'],
-                      (String? newValue) {
-                    setState(() {
-                      selectedHeartRate = newValue!;
-                    });
-                  },
-                  labelTextStyle: labelTextStyle,
-                )),
-                Center(child: _buildLabel('Select Activity:', labelTextStyle)),
-                Center(child: _buildStyledDropdown(
-                  selectedActivity,
-                  ['Cycling', 'Walking', 'Running'],
-                      (String? newValue) {
-                    setState(() {
-                      selectedActivity = newValue!;
-                    });
-                  },
-                  labelTextStyle: labelTextStyle,
-                )),
-                Center(child: _buildStyledTextField(feature3Controller, 'Age', labelTextStyle)),
-                Center(child: Text('Select Gender:', style: labelTextStyle)),
-                Center(child: _buildStyledDropdown(
-                  selectedGender,
-                  ['Male', 'Female'],
-                      (String? newValue) {
-                    setState(() {
-                      selectedGender = newValue!;
-                    });
-                  },
-                  labelTextStyle: labelTextStyle,
-                )),
-                Center(child: Text('Select Your Medical History:', style: labelTextStyle)),
-                Center(child: _buildStyledDropdown(
-                  selectedMedicalH,
-                  ['None', 'Allergies', 'Asthma', 'Cancer', 'Diabetes', 'Heart disease', 'Hypertension'],
-                      (String? newValue) {
-                    setState(() {
-                      selectedMedicalH = newValue!;
-                    });
-                  },
-                  labelTextStyle: labelTextStyle,
-                )),
-                Center(child: _buildButton('Predict Anomality', makeHeartRatePrediction)),
-                SizedBox(height: 20),
-                _buildResultText(),
-
-                SizedBox(height: 20),
+            child: SingleChildScrollView( // Wrap your Column with SingleChildScrollView
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Center(
+                    child: _buildStyledDropdown(
+                      selectedHeartRate,
+                      ['High', 'Low', 'Medium'],
+                          (String? newValue) {
+                        setState(() {
+                          selectedHeartRate = newValue!;
+                        });
+                      },
+                      labelText: 'Select Heart Rate',
+                      labelTextStyle: labelTextStyle,
+                      iconData: Icons.favorite,
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Center(
+                    child: _buildStyledDropdown(
+                      selectedActivity,
+                      ['Cycling', 'Walking', 'Running'],
+                          (String? newValue) {
+                        setState(() {
+                          selectedActivity = newValue!;
+                        });
+                      },
+                      labelText: 'Select Activity',
+                      labelTextStyle: labelTextStyle,
+                      iconData: Icons.directions_run,
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Center(
+                    child: _buildStyledTextField(
+                      feature3Controller,
+                      'Age',
+                      labelTextStyle,
+                      Icons.person,
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Center(
+                    child: _buildStyledDropdown(
+                      selectedGender,
+                      ['Male', 'Female'],
+                          (String? newValue) {
+                        setState(() {
+                          selectedGender = newValue!;
+                        });
+                      },
+                      labelText: 'Select Gender',
+                      labelTextStyle: labelTextStyle,
+                      iconData: Icons.accessibility,
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Center(
+                    child: _buildStyledDropdown(
+                      selectedMedicalH,
+                      [
+                        'None',
+                        'Allergies',
+                        'Asthma',
+                        'Cancer',
+                        'Diabetes',
+                        'Heart disease',
+                        'Hypertension'
+                      ],
+                          (String? newValue) {
+                        setState(() {
+                          selectedMedicalH = newValue!;
+                        });
+                      },
+                      labelText: 'Select Your Medical History',
+                      labelTextStyle: labelTextStyle,
+                      iconData: Icons.healing,
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Center(
+                    child: _buildButton('Predict Anomaly', makeHeartRatePrediction),
+                  ),
+                  SizedBox(height: 20),
+                  _buildResultText(),
+                  SizedBox(height: 20),
                   _buildButton(
-                    'Chronic Disease Risk Prediction',
+                    'Physical Activity Risk Prediction',
                         () {
-                      Navigator.pushNamed(context, ChronicPhysical.routeName);
+                      Navigator.push(context, _customPageRouteBuilder(ChronicPhysical()));
                     },
                   ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -176,26 +228,31 @@ class _PhysicalPageState extends State<PhysicalPage> {
     );
   }
 
-  Widget _buildLabel(String text, TextStyle style) {
-    return Text(
-      text,
-      style: style,
-    );
-  }
 
   Widget _buildStyledTextField(
       TextEditingController controller,
       String labelText,
       TextStyle labelTextStyle,
+      IconData iconData, // Add this parameter
       ) {
     return Container(
       width: 300,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            labelText,
-            style: labelTextStyle,
+          Row( // Use a Row to display the icon and label
+            children: [
+              Icon(
+                iconData,
+                color: Colors.blue[900],
+                size: 18,
+              ),
+              SizedBox(width: 8),
+              Text(
+                labelText,
+                style: labelTextStyle,
+              ),
+            ],
           ),
           SizedBox(height: 8),
           TextField(
@@ -216,6 +273,8 @@ class _PhysicalPageState extends State<PhysicalPage> {
       List<String> items,
       void Function(String?) onChanged, {
         required TextStyle labelTextStyle,
+        String? labelText, // Add this parameter
+        IconData? iconData, // Add this parameter
       }) {
     return Container(
       width: 300,
@@ -225,41 +284,67 @@ class _PhysicalPageState extends State<PhysicalPage> {
         ),
         borderRadius: BorderRadius.circular(4),
       ),
-      child: Theme(
-        data: Theme.of(context).copyWith(
-          splashColor: Colors.blue[900],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center, // Center align content
-          children: [
-            DropdownButton<String>(
-              isExpanded: true,
-              value: selectedValue,
-              onChanged: onChanged,
-              items: items.map<DropdownMenuItem<String>>(
-                    (String value) => DropdownMenuItem<String>(
-                  value: value,
-                  child: Center(
-                    child: Text(
-                      value,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              if (iconData != null)
+                Icon(
+                  iconData,
+                  color: Colors.blue[900],
+                  size: 18,
+                ),
+              if (iconData != null)
+                SizedBox(width: 8),
+              Text(
+                labelText ?? '',
+                style: labelTextStyle,
+              ),
+            ],
+          ),
+          SizedBox(height: 8),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(horizontal: 12),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.black38,
+              ),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Align(
+              alignment: Alignment.center,
+              child: DropdownButton<String>(
+                value: selectedValue,
+                onChanged: onChanged,
+                items: items.map<DropdownMenuItem<String>>(
+                      (String value) => DropdownMenuItem<String>(
+                    value: value,
+                    child: Center(
+                      child: Text(
+                        value,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                        ),
                       ),
                     ),
                   ),
+                ).toList(),
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 18,
                 ),
-              ).toList(),
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 18,
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
+
+
 
   Widget _buildButton(
       String label,
@@ -274,17 +359,62 @@ class _PhysicalPageState extends State<PhysicalPage> {
       style: ElevatedButton.styleFrom(
         primary: Colors.blue[900],
         elevation: 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0), // Adjust the radius as needed
+        ),
       ),
     );
   }
 
   Widget _buildResultText() {
-    return Text(
-      predictionResult,
-      textAlign: TextAlign.center,
-      style: TextStyle(fontSize: 18),
+    if (predictionResult.isEmpty) {
+      // If predictionResult is empty, return an empty container with zero opacity
+      return AnimatedOpacity(
+        duration: Duration(milliseconds: 500), // Set the duration of the opacity transition
+        opacity: 0.0, // Make the container invisible
+        child: Container(),
+      );
+    }
+
+    Color textColor;
+    FontWeight fontWeight = FontWeight.bold; // Set the font weight to bold
+
+    if (predictionResult.contains('Normal')) {
+      textColor = Colors.green.shade900;
+    } else if (predictionResult.contains('Abnormal')) {
+      textColor = Colors.red.shade900;
+    } else {
+      textColor = Colors.black;
+      fontWeight = FontWeight.normal;
+    }
+
+    return AnimatedOpacity(
+      duration: Duration(milliseconds: 500), // Set the duration of the opacity transition
+      opacity: 1.0, // Make the container fully visible
+      child: Container(
+        padding: EdgeInsets.all(16),
+        margin: EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 5,
+              blurRadius: 7,
+              offset: Offset(0, 3), // changes position of shadow
+            ),
+          ],
+        ),
+        child: Text(
+          predictionResult,
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 26, color: textColor, fontWeight: fontWeight),
+        ),
+      ),
     );
   }
+
 }
 
 
